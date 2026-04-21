@@ -712,7 +712,7 @@ static bool build_draft_step(
 int main(int argc, char ** argv) {
     if (argc < 6) {
         std::fprintf(stderr,
-            "usage: %s <target.gguf> <draft.safetensors> <prompt_ids.bin>"
+            "usage: %s <target.gguf> <draft.safetensors|draft.gguf> <prompt_ids.bin>"
             " <n_gen> <out_ids.bin> [--seq-verify]\n", argv[0]);
         return 2;
     }
@@ -807,11 +807,17 @@ int main(int argc, char ** argv) {
     std::printf("[target] %s\n", dflash27b_last_error());
 
     DraftWeights dw;
-    if (!load_draft_safetensors(draft_path, backend, dw)) {
-        std::fprintf(stderr, "draft load: %s\n", dflash27b_last_error());
-        return 1;
+    {
+        std::string dp(draft_path);
+        bool is_gguf = dp.size() >= 5 && dp.substr(dp.size() - 5) == ".gguf";
+        bool ok = is_gguf ? load_draft_gguf(draft_path, backend, dw)
+                          : load_draft_safetensors(draft_path, backend, dw);
+        if (!ok) {
+            std::fprintf(stderr, "draft load: %s\n", dflash27b_last_error());
+            return 1;
+        }
     }
-    std::printf("[draft]  loaded\n");
+    std::printf("[draft]  %s\n", dflash27b_last_error());
 
     const int max_ctx = g_max_ctx_override > 0 ? g_max_ctx_override : 4096;
     // Size the ssm_intermediate / conv_input_cache buffers to cover whichever

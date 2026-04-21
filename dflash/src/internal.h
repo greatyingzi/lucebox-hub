@@ -168,6 +168,10 @@ bool load_draft_safetensors(const std::string & path,
                             ggml_backend_t backend,
                             DraftWeights & out);
 
+bool load_draft_gguf(const std::string & path,
+                     ggml_backend_t backend,
+                     DraftWeights & out);
+
 void free_draft_weights(DraftWeights & w);
 
 // ─── Target cache (persistent state between forward calls) ────────

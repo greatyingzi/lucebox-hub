@@ -41,6 +41,7 @@ add_library(dflash27b STATIC
     src/errors.cpp
     src/gguf_target_loader.cpp
     src/safetensors_draft.cpp
+    src/gguf_draft_loader.cpp
     src/qwen35_target_graph.cpp
     src/qwen3_dflash_graph.cpp
     src/kv_cache.cpp
@@ -126,4 +127,11 @@ if(DFLASH27B_TESTS)
             target_link_libraries(test_dflash PRIVATE OpenMP::OpenMP_CXX)
         endif()
     endif()
+endif()
+
+# ─── Tools ────────────────────────────────────────────────────────────
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tools/gguf_quantize_draft.cpp")
+    add_executable(gguf-quantize-draft tools/gguf_quantize_draft.cpp)
+    target_link_libraries(gguf-quantize-draft PRIVATE ggml ggml-base)
 endif()

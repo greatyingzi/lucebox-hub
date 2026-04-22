@@ -1,4 +1,4 @@
 [submodule "dflash/deps/llama.cpp"]
 	path = dflash/deps/llama.cpp
-	url = https://github.com/Luce-Org/llama.cpp.git
+	url = https://github.com/greatyingzi/llama.cpp.git
 	branch = luce-dflash
